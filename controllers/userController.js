@@ -1,4 +1,4 @@
-// const { objectId } = require('mongoose').Types;
+const { objectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
 // Aggregate function to get the number of users overall
@@ -64,6 +64,8 @@ module.exports = {
                 { $set: req.body },
                 { runValidators: true, new: true }
             );
+
+            res.json(updatedUser);
         } catch (err) {
             res.status(500).json(err);
         }
