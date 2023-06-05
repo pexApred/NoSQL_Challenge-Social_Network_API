@@ -12,5 +12,23 @@ const reactionSchema = new Schema(
             required: 'Reaction is required!',
             maxlength: 280
         },
-            
-)
+        username: {
+            type: String,
+            required: 'Username is required!'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+            // Use a getter method to format the timestamp on query
+            get: (createdAtVal) => fateFormat(createdAtVal)
+        }
+    },
+    {
+        toJSON: {
+            getters: true
+        },
+        id: false
+    }
+);
+
+module.exports = reactionSchema;
