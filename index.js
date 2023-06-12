@@ -1,4 +1,6 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const { User, Thought } = require('./models');
 const db = require('./config/connection');
 const routes = require('./routes');
 
