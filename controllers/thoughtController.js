@@ -13,7 +13,7 @@ module.exports = {
     // get a single thought by its _id
     async getSingleThought(req, res) {
         try {
-            const thought = await Thought.findOne({ _id: req.params.thoughtId }).select('-__v');
+            const thought = await Thought.findById(req.params.thoughtId ).select('-__v');
             
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with this id!' });
@@ -67,7 +67,7 @@ module.exports = {
                 return res.status(404).json({ message: 'No thought with this id!' });
             }
 
-            const user =  await User.findOneAndUpdate( 
+            await User.findOneAndUpdate( 
                 { username: thought.username },
                 { $pull: { thoughts: thought._id } },
                 { validation: true, new: true } 

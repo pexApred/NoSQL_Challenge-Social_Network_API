@@ -1,11 +1,21 @@
-const { objectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
 // Aggregate function to get the number of users overall
 const headCount = async () => {
-    const userCount = await User.aggregate().count('userCount');
-    return userCount;
-}
+    try {
+        const userCount = await User.aggregate().count('userCount');
+
+        if (userCount.length === 0) {
+            return 0;
+        }
+
+        return userCount[0].userCount;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 
 module.exports = {
     // GET all users
@@ -27,7 +37,7 @@ module.exports = {
     // GET a single user by its _id and populated thought and friend data
     async getSingleUser(req, res) {
         try {
-            const user = await User.findOne({ _id: req.params.userId })
+            const user = await User.findById(req.params.userId)
                 .populate({
                     path: 'thoughts',
                     select: '-__v',
@@ -74,7 +84,7 @@ module.exports = {
     // DELETE to remove user by its _id
     async deleteUser(req, res) {
         try {
-            const deletedUser = await User.findOneAndRemove({ _id: req.params.userId });
+            const deletedUser = await User.findByIdAndDelete(req.params.userId);
 
             if (!deletedUser) {
                 return res.status(404).json({ message: 'No such user exists!' });

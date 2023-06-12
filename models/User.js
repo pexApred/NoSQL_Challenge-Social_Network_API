@@ -1,8 +1,8 @@
-const { Schema, model } = require('mongoose');
-const thoughtSchema = require('./Thought');
+const { Schema, Types } = require('mongoose');
+const mongoose = require('mongoose');
 
 // Create the User model using the userSchema
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,
@@ -17,7 +17,12 @@ const userSchema = new Schema(
             // Use a regex pattern to validate the email address
             match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
         },
-        thoughts: [thoughtSchema],
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Thought'
+            }
+        ],
         friends: [
             {
                 type: Schema.Types.ObjectId,
@@ -41,7 +46,7 @@ userSchema.virtual('friendCount').get(function () {
 );
 
 // create the User model using the userSchema
-const User = model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 // export the User model
 module.exports = User;
