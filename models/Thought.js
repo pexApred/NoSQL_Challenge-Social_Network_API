@@ -1,11 +1,11 @@
 const { Schema, model } = require('mongoose');
-
+const dateFormat = require('../utils/dateFormat');
 // Create the Thought model using the thoughtSchema
 const thoughtSchema = new Schema(
     {
         thoughtText: {
             type: String,
-            required: 'Thought is required!',
+            required: true,
             minlength: 1,
             maxlength: 280
         },
@@ -17,13 +17,14 @@ const thoughtSchema = new Schema(
         },
         username: {
             type: String,
-            required: 'Username is required!'
+            required: true
         },
         // use ReplySchema to validate data for a reply
         reactions: [reactionSchema]
     },
     {
         toJSON: {
+            virtuals: true,
             getters: true
         },
         id: false

@@ -7,17 +7,22 @@ const userSchema = new Schema(
         username: {
             type: String,
             unique: true,
-            required: 'Username is required!',
+            required: true,
             trim: true
         },
         email: {
             type: String,
             unique: true,
-            required: 'Email is required!',
+            required: true,
             // Use a regex pattern to validate the email address
             match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
         },
-        thoughts: [thoughtSchema],
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Thought'
+            }
+        ],
         friends: [
             {
                 type: Schema.Types.ObjectId,
@@ -27,7 +32,8 @@ const userSchema = new Schema(
     },
     {
         toJSON: {
-            virtuals: true
+            virtuals: true,
+            getters: true
         },
         id: false
     }
