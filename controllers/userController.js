@@ -21,13 +21,12 @@ module.exports = {
     // GET all users
     async getAllUsers(req, res) {
         try {
-            const users = await User.find({});
+            const allUsers = await User.find({});
 
             const userObj = {
-                users,
+                allUsers,
                 headCount: await headCount(),
             };
-
             res.json(userObj);
         } catch (err) {
             console.log(err);
@@ -37,7 +36,7 @@ module.exports = {
     // GET a single user by its _id and populated thought and friend data
     async getSingleUser(req, res) {
         try {
-            const user = await User.findById(req.params.userId)
+            const singleUser = await User.findById(req.params.userId)
                 .populate({
                     path: 'thoughts',
                     select: '-__v',
@@ -46,12 +45,10 @@ module.exports = {
                     path: 'friends',
                     select: '-__v',
                 });
-
-            if (!user) {
+            if (!singleUser) {
                 return res.status(404).json({ message: 'No user with this id!' });
             }
-
-            res.json(user);
+            res.json(singleUser);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -59,8 +56,11 @@ module.exports = {
     // POST a new user:
     async createUser(req, res) {
         try {
-            const user = await User.create(req.body);
-            res.json(user);
+            const newUser = await User.create(req.body);
+            if (!newUser) {
+                return res.status(404).json({ message: 'Unsuccessful in creating new user!' });
+            }
+            res.json(newUser);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -74,7 +74,9 @@ module.exports = {
                 { $set: req.body },
                 { runValidators: true, new: true }
             );
-
+                if (!updatedUser) {
+                    return res.status(404).json({ message: 'Could not update user!' });
+                }
             res.json(updatedUser);
         } catch (err) {
             res.status(500).json(err);
@@ -113,17 +115,17 @@ module.exports = {
         console.log(req.body);
 
         try {
-            const updatedUser = await User.findOneAndUpdate(
+            const newFriend = await User.findOneAndUpdate(
                 { _id: req.params.userId },
                 { $addToSet: { friends: req.body } },
                 { runValidators: true, new: true }
             );
 
-            if (!updatedUser) {
+            if (!newFriend) {
                 return res.status(404).json({ message: 'No user with this id!' });
             }
 
-            res.json(updatedUser);
+            res.json(newFriend);
         } catch (err) {
             res.status(500).json(err);
         }
@@ -132,17 +134,16 @@ module.exports = {
     // DELETE to remove a friend from a user's friend list
     async removeFriend(req, res) {
         try {
-            const updatedUser = await User.findOneAndUpdate(
+            const deletedFriend = await User.findOneAndUpdate(
                 { _id: req.params.userId },
                 { $pull: { friends: req.params.friendId } },
                 { runValidators: true, new: true }
             );
 
-            if (!updatedUser) {
+            if (!deletedFriend) {
                 return res.status(404).json({ message: 'No user with this id!' });
             }
-
-            res.json(updatedUser);
+            res.json(deletedFriend);
         } catch (err) {
             res.status(500).json(err);
         }
