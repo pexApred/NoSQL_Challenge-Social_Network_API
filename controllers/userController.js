@@ -122,7 +122,7 @@ module.exports = {
             );
 
             if (!newFriend) {
-                return res.status(404).json({ message: 'No user with this id!' });
+                return res.status(404).json({ message: 'This friend does not exist!' });
             }
 
             res.json(newFriend);
@@ -141,7 +141,7 @@ module.exports = {
             );
 
             if (!deletedFriend) {
-                return res.status(404).json({ message: 'No user with this id!' });
+                return res.status(404).json({ message: 'No friend to delete!' });
             }
             res.json(deletedFriend);
         } catch (err) {
