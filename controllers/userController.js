@@ -117,7 +117,7 @@ module.exports = {
         try {
             const newFriend = await User.findOneAndUpdate(
                 { _id: req.params.userId },
-                { $addToSet: { friends: req.body } },
+                { $addToSet: { friends: req.body.objectId } },
                 { runValidators: true, new: true }
             );
 
@@ -136,7 +136,7 @@ module.exports = {
         try {
             const deletedFriend = await User.findOneAndUpdate(
                 { _id: req.params.userId },
-                { $pull: { friends: req.params.friendId } },
+                { $pull: { friends: req.params.objectId } },
                 { runValidators: true, new: true }
             );
 

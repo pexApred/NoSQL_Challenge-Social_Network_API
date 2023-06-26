@@ -1,8 +1,9 @@
-const { Schema, Types } = require('mongoose');
 const mongoose = require('mongoose');
 
+const { Schema, Types } = mongoose;
+
 // Create the User model using the userSchema
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
     {
         username: {
             type: String,
