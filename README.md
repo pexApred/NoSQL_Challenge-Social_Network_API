@@ -62,7 +62,7 @@ The project uses the following technologies:
 * Mongoose ODM
 
 Link to walkthrough below:
-
+https://drive.google.com/file/d/1j_Lrthu252PYAqxLUkjHWYimKpO-tnF9/view
 
 ## Contributing
 
