@@ -1,4 +1,5 @@
 const { Thought, User } = require('../models');
+const { reactionSchema } = require('../models/Reaction');
 
 module.exports = {
     // get all thoughts
@@ -86,17 +87,15 @@ module.exports = {
 
     // POST to create a reaction stored in a single thought's reactions array field
     async addReaction(req, res) {
-        try {
+        try {          
             const newReaction = await Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
-                { $push: { reactions: req.body } },
+                { $addToSet: {reactions: req.body }},
                 { runValidators: true, new: true }
             );
-
             if (!newReaction) {
                 return res.status(404).json({ message: 'No thought with this id!' });
             }
-
             res.json(newReaction);
         }
         catch (err) {
