@@ -1,11 +1,12 @@
 const { Schema, model } = require('mongoose');
-
+const dateFormat = require('../utils/dateFormat');
+const reactionSchema = require('./Reaction');
 // Create the Thought model using the thoughtSchema
 const thoughtSchema = new Schema(
     {
         thoughtText: {
             type: String,
-            required: 'Thought is required!',
+            required: 'You need to provide a thought!',
             minlength: 1,
             maxlength: 280
         },
@@ -13,17 +14,20 @@ const thoughtSchema = new Schema(
             type: Date,
             default: Date.now(),
             // Use a getter method to format the timestamp on query
-            get: (createdAtVal) => dateFormat(createdAtVal)
+            get: function (currentDate) {
+                return dateFormat(currentDate);
+            }
         },
         username: {
             type: String,
-            required: 'Username is required!'
+            required: 'You need to provide a username!'
         },
         // use ReplySchema to validate data for a reply
         reactions: [reactionSchema]
     },
     {
         toJSON: {
+            virtuals: true,
             getters: true
         },
         id: false
@@ -39,4 +43,4 @@ thoughtSchema.virtual('reactionCount').get(function () {
 const Thought = model('Thought', thoughtSchema);
 
 // export the Thought model
-module.exports = Thought;
+module.exports = Thought ;
