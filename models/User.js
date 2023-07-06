@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const { Schema, Types } = mongoose;
+const { Schema } = require('mongoose');
 
 // Create the User model using the userSchema
 const userSchema = new Schema(
